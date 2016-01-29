@@ -12,6 +12,18 @@
 %     Z        a matrix of order G * N. The element Z(i,j) is the cluster
 %              number of point j in cluser i. 
 function [data, mu, mixing, Z] = data_generate(N, K, G, D)
+if nargin < 1
+    N = 500;
+end
+if nargin < 2
+    K = 5;
+end
+if nargin < 3
+    G = 5;
+end
+if nargin < 4
+    D = 2;
+end
 %--------------------------------------------------------------------------
 % STEP 1: Generate mixing measure
 %--------------------------------------------------------------------------
@@ -33,14 +45,9 @@ end
 
 %--------------------------------------------------------------------------
 % STEP 3: Generate cluster centers
-%--------------------------------------------------------------------------
-mu = zeros(K, D); % one row per center.
-mu(1,:) = mvnrnd(zeros(1, D), eye(D));
-for i = 2:K
-    direction = rand(1, D);
-    direction = direction / sqrt(direction .^ 2) * 4;
-    mu(i,:) = mu(i-1,:) + direction;
-end
+%-------------------------------------------------------------------------- 
+sigma = eye(D) * (4 * D)^2;
+mu = mvnrnd(zeros(1,D), sigma, K); % one row per center.
 
 %--------------------------------------------------------------------------
 % STEP 3: Generate the data set
